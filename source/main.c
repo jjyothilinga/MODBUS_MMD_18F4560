@@ -6,8 +6,36 @@
 *------------------------------------------------------------------------------
 */
 
+
+
+/*
+*------------------------------------------------------------------------------
+* Include Files
+*------------------------------------------------------------------------------
+*/
+
+#include <timers.h>				// Timer library functions
+#include <delays.h>				// Dely library functions
+#include <string.h>				// String library functions
+#include "board.h"				// board setup
+#include "timer.h"
+#include "heartbeat.h"
+#include "mmd.h"
+#include "app.h"
+#include "mb.h"
+/*
+*------------------------------------------------------------------------------
+* Private Defines
+*------------------------------------------------------------------------------
+*/
+
+/*
+*------------------------------------------------------------------------------
+* Processor config bits
+*------------------------------------------------------------------------------
+*/
+
 #pragma config OSC      = HSPLL
-//#pragma config OSC      = INTIO67
 #pragma config FCMEN    = OFF
 #pragma config IESO     = OFF
 #pragma config PWRT     = OFF
@@ -40,39 +68,6 @@
 #pragma config EBTR2    = OFF
 #pragma config EBTR3    = OFF
 #pragma config EBTRB    = OFF
-
-
-/*
-*------------------------------------------------------------------------------
-* Include Files
-*------------------------------------------------------------------------------
-*/
-
-#include <timers.h>				// Timer library functions
-#include <delays.h>				// Delay library functions
-#include <string.h>				// String library functions
-#include "board.h"				// board setup
-#include "timer.h"
-#include "heartbeat.h"
-#include "config.h"
-#include "mb.h"
-#include "mmd.h"
-#include "app.h"
-
-/*
-*------------------------------------------------------------------------------
-* Private Defines
-*------------------------------------------------------------------------------
-*/
-
-/*
-*------------------------------------------------------------------------------
-* Processor config bits
-*------------------------------------------------------------------------------
-*/
-
-
-
 /*
 *------------------------------------------------------------------------------
 * Private Macros
@@ -93,12 +88,10 @@
 
 
 /*
-
 *------------------------------------------------------------------------------
 * Private Variables (static)
 *------------------------------------------------------------------------------
 */
-
 /*
 *------------------------------------------------------------------------------
 * Public Constants
@@ -143,47 +136,53 @@
 *------------------------------------------------------------------------------
 */
 
-#define MMD_REFRESH_PERIOD	(65535 - 12000)
+#define MMD_REFRESH_PERIOD	(65535 - 15000)
+#define TICK_PERIOD	(65535 - 10000)
 
 void main(void)
 {
-	unsigned long temp;
-
+	UINT8 i,j;
 #ifdef MMD_TEST
 	MMD_Config mmdConfig= {0};
 	//UINT8 line[50] ="Ideonics ideas and electronics, subhrajyoti biswal "; 
-	UINT8 line[50] ="ABCD ";
+	UINT8 line[10] = "AB ";
+	UINT8 data[10] = "IDEONICS1 ";
+
 #endif
 
 	BRD_init();			//board initialization
-
-	TMR0_init(tickPeriod,0);		//initialize timer0
-	TMR1_init(MMD_REFRESH_PERIOD,MMD_refreshDisplay);		//initialize timer1
-
-
+	
+	HB_init();			//initialize heart beat module
+	MMD_init();			//initialize mmd module
 	APP_init();
 
+	TMR0_init(TICK_PERIOD,0);		//initialize timer0
+	TMR1_init(MMD_REFRESH_PERIOD,MMD_refreshDisplay);		//initialize timer1					//initialize timer1
 
-	EnableInterrupts();		//Interrupts initialization
-
-	//Heart Beat to blink at every 500ms
-	temp = (500UL *1000UL)/TIMER0_TIMEOUT_DURATION;
+	EnableInterrupts( );
 
 #ifdef MMD_TEST
 	MMD_clearSegment(0);
 	mmdConfig.startAddress = 0;
-	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.length = 3;
 	mmdConfig.symbolCount = strlen(line);
 	mmdConfig.symbolBuffer = line;
 	mmdConfig.scrollSpeed = 0;	
 	MMD_configSegment( 0 , &mmdConfig);
+
+	MMD_clearSegment(1);
+	mmdConfig.startAddress = 3;
+	mmdConfig.length = 9;
+	mmdConfig.symbolCount = strlen(data);
+	mmdConfig.symbolBuffer = data;
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 1 , &mmdConfig);
 #endif
 	
-	while(1)
-	{
-
+   	while(LOOP_FOREVER)
+    {
 		//Heart Beat to blink at every 500ms
-	`	if(heartBeatCount >= temp )
+	`	if(heartBeatCount >= 500 )
 		{			
 			HB_task();
 			heartBeatCount = 0;
@@ -195,9 +194,11 @@ void main(void)
 			mmdUpdateCount = 0;
 		}
 
-//		eMBPoll();	//modbus task
-		
-	}
+		eMBPoll();
+
+		ClrWdt();				// Kick the dog
+    }
+
 
 
 }

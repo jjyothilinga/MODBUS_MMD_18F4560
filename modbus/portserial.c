@@ -20,7 +20,6 @@
  */
 
 #include "port.h"
-#include "board.h"
 
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
@@ -69,43 +68,33 @@ xMBPortSerialInit( UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBParity e
 				USART_BRGH_HIGH;
 // configure USART
 
-//	unsigned char bdValue;
-	ULONG bdValue;
-/*	switch(ulBaudRate)
+	unsigned char bdValue;
+	switch(ulBaudRate)
 	{
-		case 2400:
-			bdValue = 207;	//2400bps
+		case 1:
+			bdValue = 255;	//9600bps
 		break;
 
-		case 9600:
-			bdValue = 51;	//9600bps
+		case 2:
+			bdValue = 129;	//19200bps
 		break;
 
-		case 19200				:
-			bdValue = 25;	//19200bps
+		case 3:
+			bdValue = 42;	//57600bps
 		break;
 
-		case 57600:
-			bdValue = 8;	//57600bps
+		case 4:
+			bdValue = 21;	//115200bps
 		break;
+
 		default:
-			bdValue = 51;		//default baudrate = 9600
+			bdValue = 129;		//default baudrate = 9600
 		break;
 	}
-*/
 
-
-	ulBaudRate += (unsigned long)1;
-	ulBaudRate *= (unsigned long)16;
-	bdValue = GetSystemClock() / ulBaudRate;
-
-#if(defined __18F8722_H) ||(defined __18F46K22_H)
-	Open1USART( uartConfig ,
-				bdValue); 
-#else
 	OpenUSART( uartConfig ,
 				bdValue); 
-#endif		
+		
 		
   	IPR1bits.RCIP = 1;	// Make receive interrupt high priority
 //	IPR1bits.TXIP = 1;	// Make transmit interrupt high priority
@@ -119,20 +108,11 @@ xMBPortSerialPutByte( CHAR ucByte )
     /* Put a byte in the UARTs transmit buffer. This function is called
      * by the protocol stack if pxMBFrameCBTransmitterEmpty( ) has been
      * called. */
-#ifdef __18F8722
-	TX1_EN = 1;
-#else	
-	TX_EN = 1;
-#endif
+	TX_EN = 1;	
 	Delay10us(10);
 	TXREG = ucByte;	//transmit
-#ifdef __18F8722
-	while(Busy1USART());
-	TX1_EN = 0;
-#else
 	while(BusyUSART());
 	TX_EN = 0;
-#endif
 	Delay10us(10);
     return TRUE;
 
@@ -145,15 +125,9 @@ xMBPortSerialGetByte( CHAR * pucByte )
      * by the protocol stack after pxMBFrameCBByteReceived( ) has been called.
      */
 	volatile unsigned char data;
-#if(defined __18F8722_H) ||(defined __18F46K22_H)
-	data = Read1USART();
-#else
 	data = ReadUSART();
-#endif
-
 	*pucByte = data;
 
-	
     PIR1bits.RCIF = 0;	// Clear the interrupt flag
     return TRUE;
 }

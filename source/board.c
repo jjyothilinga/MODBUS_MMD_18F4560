@@ -5,6 +5,7 @@
 *
 * Board specipic drivers module(BSP)
 *
+* (C)2009 Sam's Logic.
 *
 * The copyright notice above does not evidence any
 * actual or intended publication of such source code.
@@ -12,6 +13,24 @@
 *------------------------------------------------------------------------------
 */
 
+/*
+*------------------------------------------------------------------------------
+* File				: device.c
+* Created by		: Sam
+* Last changed by	: Sam
+* Last changed		: 11/12/2010 
+*------------------------------------------------------------------------------
+* Revision 1.3 11/12/2010  Sam
+* Demo Release
+* Revision 1.2 15/11/2010  Sam
+* Updated according to the current project requirement
+* Revision 1.1 07/07/2010 Sam
+* First Release
+* Revision 1.0 14/07/2009 Sam
+* Initial revision
+*
+*------------------------------------------------------------------------------
+*/
 
 /*
 *------------------------------------------------------------------------------
@@ -50,7 +69,7 @@
 * Public Variables
 *------------------------------------------------------------------------------
 */
-UINT16 tickPeriod = 0;
+
 /*
 *------------------------------------------------------------------------------
 * Private Variables (static)
@@ -97,43 +116,9 @@ static BOOL ledState;
 */
 void BRD_init(void)
 {
-	unsigned long clock, temp;
-
-	//Store sytem clock
-	clock = SYSTEM_CLOCK;
-
-	switch(clock)
-	{
-
-		case MHz_32:
-		default:
-				OSCCON = 0X60; 		//internal oscillator 32MHz
-				OSCTUNEbits.PLLEN = 1;	//PLL Enable
-		break;
-		
-		case MHz_16:
-				OSCCON = 0X70; 		//internal oscillator 16MHz
-				OSCTUNEbits.PLLEN = 0;	//PLL Enable
-		break;
-
-		case MHz_40:
-		break;
-	}
-
-	//calculating tick period for timer-0
-	temp = clock >> 2;	
-	temp *= (TIMER0_TIMEOUT_DURATION/1000);
-	temp /= 1000;		
-
-	tickPeriod = (FULLSCALE_16BIT - (UINT16)temp);
-
-
-
 	// set all anolog channels as Digital I/O
-	ADCON0 = 0x00;	
-	ADCON0 = 0x0F;
-
-
+	ADCON1 = 0x0F;
+	ADCON0 = 0X00;		//Turn off ADC
 
 	HEART_BEAT_DIRECTION = PORT_OUT;
 
@@ -172,6 +157,10 @@ void BRD_init(void)
 	ROW_SEL_F = SWITCH_OFF;
 	ROW_SEL_G_DIR = PORT_OUT;
 	ROW_SEL_G = SWITCH_OFF;
+	ROW_SEL_H_DIR = PORT_OUT;
+	ROW_SEL_H = SWITCH_OFF;
+
+
 }
 
 

@@ -16,12 +16,13 @@ typedef struct _APP
 	UINT8 eepUpdate;
 
 
-	UINT8	valueBuffer[16]; // to store current values of line   
+	UINT8	valueBuffer[36]; // to store current values of line   
 }APP;
 
 #pragma idata APP_DATA
 APP app = {{0},0};
 MMD_Config mmdConfig = {0}; 
+UINT8 data[] = "01 IDEONICS IDEAS & ELECTRONICS SUBHRA";
 #pragma idata
 
 
@@ -32,11 +33,56 @@ void APP_init(void)
 	eMBErrorCode    eStatus;
 
 	
-	sbaudrate = 19200;
+	sbaudrate = 2;//19200;
 	saddress = 1;
 	//modbus configuration
 	eStatus = eMBInit( MB_RTU, ( UCHAR )saddress, 0, sbaudrate, MB_PAR_NONE);
 	eStatus = eMBEnable(  );	/* Enable the Modbus Protocol Stack. */
+
+	for(i = 0; i < 33; i++)
+	{
+		app.valueBuffer[i] = data[i];
+	}
+
+	MMD_clearSegment(0);
+	mmdConfig.startAddress = 0;
+	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
+	mmdConfig.symbolBuffer = app.valueBuffer;
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 0 , &mmdConfig);
+
+	MMD_clearSegment(1);
+	mmdConfig.startAddress = MMD_MAX_CHARS;
+	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
+	mmdConfig.symbolBuffer = (app.valueBuffer + MMD_MAX_CHARS);
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 1 , &mmdConfig);
+
+	MMD_clearSegment(2);
+	mmdConfig.startAddress = MMD_MAX_CHARS * 2;
+	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
+	mmdConfig.symbolBuffer = (app.valueBuffer + (MMD_MAX_CHARS * 2));
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 2 , &mmdConfig);
+
+	MMD_clearSegment(3);
+	mmdConfig.startAddress = MMD_MAX_CHARS * 3;
+	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
+	mmdConfig.symbolBuffer = (app.valueBuffer + (MMD_MAX_CHARS * 3));
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 3 , &mmdConfig);
+
+	MMD_clearSegment(4);
+	mmdConfig.startAddress = MMD_MAX_CHARS * 4;
+	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
+	mmdConfig.symbolBuffer = (app.valueBuffer+(MMD_MAX_CHARS * 4));
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 4 , &mmdConfig);
 
 }
 
@@ -88,6 +134,7 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs,
 	UINT8	no_regs		 = usNRegs * 2;
 	eMBErrorCode    eStatus = MB_ENOERR;
 	UINT8 i = 0;
+	UINT8 test[10] = "IDEONICS ";
 
 	switch(eMode)
 	{
@@ -102,7 +149,7 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs,
 		starting_add++;
 		no_regs	--;
 	}
-	app.valueBuffer[i++] = 0;
+//	app.valueBuffer[i++] = 0;
     break;
 
  	case MB_REG_READ: 
@@ -126,13 +173,46 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs,
    	 break;
 	}
 
+
 	MMD_clearSegment(0);
 	mmdConfig.startAddress = 0;
 	mmdConfig.length = MMD_MAX_CHARS;
-	mmdConfig.symbolCount = strlen(app.valueBuffer);
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
 	mmdConfig.symbolBuffer = app.valueBuffer;
 	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
 	MMD_configSegment( 0 , &mmdConfig);
+
+	MMD_clearSegment(1);
+	mmdConfig.startAddress = MMD_MAX_CHARS;
+	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
+	mmdConfig.symbolBuffer = (app.valueBuffer + MMD_MAX_CHARS);
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 1 , &mmdConfig);
+
+	MMD_clearSegment(2);
+	mmdConfig.startAddress = MMD_MAX_CHARS * 2;
+	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
+	mmdConfig.symbolBuffer = (app.valueBuffer + (MMD_MAX_CHARS * 2));
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 2 , &mmdConfig);
+
+	MMD_clearSegment(3);
+	mmdConfig.startAddress = MMD_MAX_CHARS * 3;
+	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
+	mmdConfig.symbolBuffer = (app.valueBuffer + (MMD_MAX_CHARS * 3));
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 3 , &mmdConfig);
+
+	MMD_clearSegment(4);
+	mmdConfig.startAddress = MMD_MAX_CHARS * 4;
+	mmdConfig.length = MMD_MAX_CHARS;
+	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
+	mmdConfig.symbolBuffer = (app.valueBuffer+(MMD_MAX_CHARS * 4));
+	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
+	MMD_configSegment( 4 , &mmdConfig);
 
 	return eStatus;
   }

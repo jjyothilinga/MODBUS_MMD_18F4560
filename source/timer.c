@@ -6,15 +6,13 @@ typedef struct _TMR
 	void (*func)(void);
 }TMR;
 
-TMR tmr[3] = { 0 , 0 };
-
+TMR tmr[2] = { 0 , 0 };
 
 
 unsigned long heartBeatCount  =0 ;
 UINT16 keypadUpdate_count  =0 ;
 UINT16 comUpdateCount = 0;
 UINT16 mmdUpdateCount = 0;
-
 /*
 *------------------------------------------------------------------------------
 * void TMR0_ISR(void)
@@ -36,17 +34,16 @@ void TMR0_ISR(void)
    	* same interrupt multiple times.
    	*/
   	INTCONbits.TMR0IF = 0;
+	// Reload value for 5ms overflow
+	WriteTimer0(tmr[0].reload);
+
+	if(tmr[0].func != 0 )
+		(*(tmr[0].func))();
 
 	++heartBeatCount;
 	++keypadUpdate_count;
 	++comUpdateCount;
 	++mmdUpdateCount;
-	if(tmr[0].func != 0 )
-		(*(tmr[0].func))();
-
-
-	// Reload value for 1ms overflow
-	WriteTimer0(tmr[0].reload);
 }
 #pragma code
 
@@ -67,18 +64,17 @@ void TMR0_ISR(void)
 void TMR1_ISR(void)
 {
   	/*
-   	* Clears the TMR1 interrupt flag to stop the program from processing the
+   	* Clears the TMR0 interrupt flag to stop the program from processing the
    	* same interrupt multiple times.
    	*/
   	PIR1bits.TMR1IF = 0;
 	// Reload value for 1ms overflow
 	WriteTimer1(tmr[1].reload);
+
 	if(tmr[1].func != 0 )
 		(*(tmr[1].func))();
-
 }
 #pragma code
-
 
 /*
 *------------------------------------------------------------------------------
@@ -97,13 +93,11 @@ void TMR0_init(UINT16 reload , void (*func)(void))
 	// Enable the TMR0 interrupt,16bit counter
 	// with internal clock,No prescalar.
    	OpenTimer0(TIMER_INT_ON & T0_SOURCE_INT & T0_16BIT & T0_PS_1_1);
-
+	// Reload value for 5ms overflow
+	WriteTimer0(reload);
 	
 	tmr[0].reload = reload;
 	tmr[0].func = func;
-
-	// Reload value for 5ms overflow
-	WriteTimer0(reload);
 }
 
 /*
@@ -131,5 +125,3 @@ void TMR1_init(unsigned int reload , void (*func)())
 	tmr[1].func = func;
 
 }
-
-

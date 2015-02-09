@@ -2,7 +2,7 @@
 
 
 
-#define ROWS_PER_SYMBOL		7
+#define ROWS_PER_SYMBOL		8
 #define COLUMNS_PER_SYMBOL	5
 #define	COLUMNS_PER_CHARACTER	5
 #define ROWS_PER_CHARACTER		7

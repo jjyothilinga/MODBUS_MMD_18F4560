@@ -174,7 +174,7 @@ void makeBitMap(UINT8 id , UINT8 row );
 
 #pragma idata mmd_data
 MMD_Segment mmdSegment[MMD_MAX_SEGMENTS]= {0};
-#pragma idata
+#pragma udata
 
 
 /*
@@ -494,7 +494,9 @@ void MMD_refreshDisplay(void)
 	ROW_SEL_F = 0;
 	ROW_SEL_G = 0;
 	ROW_SEL_H = 0;
+
 	
+
 	for( i = 0 ; i < MMD_MAX_SEGMENTS ; i++)
 	{
 		

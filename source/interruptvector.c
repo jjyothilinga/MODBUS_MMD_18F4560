@@ -2,6 +2,7 @@
 #include "timer.h"
 #include "port.h"
 
+
 /*
  * For PIC18xxxx devices, the low interrupt vector is found at 000000018h.
  * Change the default code section to the absolute code section named
@@ -15,7 +16,6 @@ void high_interrupt (void)
 	/*
    	* Inline assembly that will jump to the ISR.
    	*/
-
 	if(INTCONbits.TMR0IF == 1)
 	{
   		_asm GOTO TMR0_ISR _endasm
@@ -26,6 +26,7 @@ void high_interrupt (void)
 		_asm GOTO TMR1_ISR _endasm
 	}
 
+
 	if(PIR2bits.TMR3IF == 1)
 	{
 		_asm GOTO prvvTIMERExpiredISR _endasm
@@ -35,7 +36,18 @@ void high_interrupt (void)
 	{
 		_asm GOTO prvvUARTRxISR _endasm
 	}
+
 }
+/*
+#pragma code low_vector=0x18
+void low_interrupt (void)
+{
+	if(PIR1bits.TMR1IF == 1)
+	{
+		_asm GOTO timer1ISR _endasm
+	}
+}
+*/
 /*
 *------------------------------------------------------------------------------
 * void EnableInterrupts(void)
@@ -54,5 +66,4 @@ void EnableInterrupts(void)
   	RCONbits.IPEN = 1;
  	// Enable all high priority interrupts
   	INTCONbits.GIEH = 1;
-	INTCONbits.GIEL = 1;
 }

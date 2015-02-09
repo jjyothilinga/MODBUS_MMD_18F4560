@@ -54,6 +54,7 @@ extern UINT16 tickPeriod;
 extern unsigned long heartBeatCount;
 extern UINT16 mmdUpdateCount;
 /*
+/*
 *------------------------------------------------------------------------------
 * Public Constants (extern)
 *------------------------------------------------------------------------------
@@ -67,10 +68,8 @@ extern UINT16 mmdUpdateCount;
 
 extern void TMR0_init(unsigned int reload , void (*func)());
 extern void TMR1_init(unsigned int reload , void (*func)());
- 
 void TMR1_ISR(void);
 void TMR0_ISR(void);
- 
 
 #endif
 /*
