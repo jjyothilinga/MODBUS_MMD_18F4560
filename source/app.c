@@ -44,45 +44,8 @@ void APP_init(void)
 		app.valueBuffer[i] = data[i];
 	}
 
-	MMD_clearSegment(0);
-	mmdConfig.startAddress = 0;
-	mmdConfig.length = MMD_MAX_CHARS;
-	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
-	mmdConfig.symbolBuffer = app.valueBuffer;
-	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
-	MMD_configSegment( 0 , &mmdConfig);
 
-	MMD_clearSegment(1);
-	mmdConfig.startAddress = MMD_MAX_CHARS;
-	mmdConfig.length = MMD_MAX_CHARS;
-	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
-	mmdConfig.symbolBuffer = (app.valueBuffer + MMD_MAX_CHARS);
-	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
-	MMD_configSegment( 1 , &mmdConfig);
 
-	MMD_clearSegment(2);
-	mmdConfig.startAddress = MMD_MAX_CHARS * 2;
-	mmdConfig.length = MMD_MAX_CHARS;
-	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
-	mmdConfig.symbolBuffer = (app.valueBuffer + (MMD_MAX_CHARS * 2));
-	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
-	MMD_configSegment( 2 , &mmdConfig);
-
-	MMD_clearSegment(3);
-	mmdConfig.startAddress = MMD_MAX_CHARS * 3;
-	mmdConfig.length = MMD_MAX_CHARS;
-	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
-	mmdConfig.symbolBuffer = (app.valueBuffer + (MMD_MAX_CHARS * 3));
-	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
-	MMD_configSegment( 3 , &mmdConfig);
-
-	MMD_clearSegment(4);
-	mmdConfig.startAddress = MMD_MAX_CHARS * 4;
-	mmdConfig.length = MMD_MAX_CHARS;
-	mmdConfig.symbolCount = MMD_MAX_CHARS;//strlen(app.valueBuffer);
-	mmdConfig.symbolBuffer = (app.valueBuffer+(MMD_MAX_CHARS * 4));
-	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
-	MMD_configSegment( 4 , &mmdConfig);
 
 }
 

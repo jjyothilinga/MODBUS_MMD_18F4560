@@ -19,9 +19,9 @@
 //MMD module configuration
 
 #define MMD_MAX_CHARS		8
-#define MMD_MAX_SEGMENTS	5
+#define MMD_MAX_SEGMENTS	1
 #define MMD_MAX_ADDRESS		128//(MMD_MAX_CHARS * MMD_MAX_SEGMENTS)
-//#define MMD_TEST
+#define MMD_TEST
 
 
 
@@ -54,7 +54,7 @@ enum
 // Enable for hardware i2c module usage
 //#define USE_MSSP_I2C
 
-
+#define __DIGIT_DISPLAY_TEST__
 //RTC CONFIGURATION
 //#define TIME_DEBUG
 

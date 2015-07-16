@@ -23,6 +23,7 @@
 #include "mmd.h"
 #include "app.h"
 #include "mb.h"
+#include "digit_driver.h"
 /*
 *------------------------------------------------------------------------------
 * Private Defines
@@ -141,16 +142,28 @@
 
 void main(void)
 {
-	UINT8 i,j;
+	UINT8 i,j,k;
 #ifdef MMD_TEST
 	MMD_Config mmdConfig= {0};
 	//UINT8 line[50] ="Ideonics ideas and electronics, subhrajyoti biswal "; 
-	UINT8 line[10] = "AB ";
-	UINT8 data[10] = "IDEONICS1 ";
+	UINT8 line[] = "MMD_MODBUS";
+	UINT8 data[] = "IDEONICS1 ";
 
 #endif
-
 	BRD_init();			//board initialization
+
+
+#ifdef __DIGIT_DISPLAY_TEST__
+
+	for(i = 6; i < 40 ; i++ )
+	{
+		for( k = 0; k < 11 ; k++)
+			{
+				DDR_loadDigit(i,k);
+				DelayMs(75);
+			}
+	}
+#endif
 	
 	HB_init();			//initialize heart beat module
 	MMD_init();			//initialize mmd module
@@ -164,19 +177,13 @@ void main(void)
 #ifdef MMD_TEST
 	MMD_clearSegment(0);
 	mmdConfig.startAddress = 0;
-	mmdConfig.length = 3;
+	mmdConfig.length = 6;
 	mmdConfig.symbolCount = strlen(line);
 	mmdConfig.symbolBuffer = line;
-	mmdConfig.scrollSpeed = 0;	
+	mmdConfig.scrollSpeed = SCROLL_SPEED_MEDIUM;	
 	MMD_configSegment( 0 , &mmdConfig);
 
-	MMD_clearSegment(1);
-	mmdConfig.startAddress = 3;
-	mmdConfig.length = 9;
-	mmdConfig.symbolCount = strlen(data);
-	mmdConfig.symbolBuffer = data;
-	mmdConfig.scrollSpeed = 0;//SCROLL_SPEED_LOW;
-	MMD_configSegment( 1 , &mmdConfig);
+
 #endif
 	
    	while(LOOP_FOREVER)

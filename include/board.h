@@ -26,7 +26,7 @@
 *------------------------------------------------------------------------------
 */
 
-#include <p18f4620.h>
+#include <p18f4520.h>
 #include <delays.h>
 #include <timers.h>
 #include "typedefs.h"
@@ -39,9 +39,18 @@
 *------------------------------------------------------------------------------
 */
 
-//Heart Beat
-#define 	HEART_BEAT					PORTCbits.RC0
-#define 	HEART_BEAT_DIRECTION		TRISCbits.TRISC0
+// Heart Beat
+#define		HEART_BEAT				LATAbits.LATA4			// high - OFF, Low - ON
+#define		HEART_BEAT_DIRECTION			TRISAbits.TRISA4
+
+#define		MMD_CONTROL				LATAbits.LATA2			// high - ON, Low - OFF
+#define		MMD_CONTROL_DIR			TRISAbits.TRISA2
+
+// I2C Port
+#define		I2C_SDA					PORTCbits.RC4			// serial data
+#define		I2C_SDA_DIR				TRISCbits.TRISC4
+#define		I2C_SCL					PORTCbits.RC3			// serial clock
+#define		I2C_SCL_DIR				TRISCbits.TRISC3
 
 // Rs485 / RS232 Serial commnunicaton port
 #define		TX_EN					PORTCbits.RC2			// TX control for RS485 communication
@@ -52,30 +61,22 @@
 #define		SER_RX_DIR				TRISCbits.TRISC7
 
 // MMD PORTS
-#define 	DISPLAY_CONTROL				PORTEbits.RE2
-#define 	DISPLAY_CONTROL_DIRECTION	TRISEbits.TRISE2
+#define 	DISPLAY_CONTROL				PORTEbits.RE0
+#define 	DISPLAY_CONTROL_DIRECTION	TRISEbits.TRISE0
 
 #define		DATA_PORT				PORTD	//LATD	 				// 7seg display data (DB0-DB7)
 #define 	DATA_PORT_DIR			TRISD
 #define		DIGIT_PORT				PORTB	//LATB	 				// digit drivers(upto 128 digits)
 #define		DIGIT_PORT_DIR			TRISB	//LATB	 				// digit drivers(upto 128 digits)
 
-#define		ROW_SEL_H				PORTAbits.RA0		// decoder digit sel A
-#define		ROW_SEL_H_DIR			TRISAbits.TRISA0
-#define		ROW_SEL_G				PORTAbits.RA1		// decoder digit sel B
-#define		ROW_SEL_G_DIR			TRISAbits.TRISA1
-#define		ROW_SEL_F				PORTAbits.RA2		// decoder digit sel C
-#define		ROW_SEL_F_DIR			TRISAbits.TRISA2
-#define		ROW_SEL_E				PORTAbits.RA3		// decoder digit sel D
-#define		ROW_SEL_E_DIR			TRISAbits.TRISA3
-#define		ROW_SEL_D				PORTAbits.RA4		// decoder digit sel E
-#define		ROW_SEL_D_DIR			TRISAbits.TRISA4
-#define		ROW_SEL_C				PORTAbits.RA5		// decoder digit sel F
-#define		ROW_SEL_C_DIR			TRISAbits.TRISA5
-#define		ROW_SEL_B				PORTEbits.RE0		// decoder digit sel G
-#define		ROW_SEL_B_DIR			TRISEbits.TRISE0
-#define		ROW_SEL_A				PORTEbits.RE1		// decoder digit sel G
-#define		ROW_SEL_A_DIR			TRISEbits.TRISE1	
+
+// Display digit select lines
+#define		DIGIT_SEL_A				PORTCbits.RC0 			// demux digit sel A
+#define		DIGIT_SEL_A_DIR			TRISCbits.TRISC0
+#define		DIGIT_SEL_B				PORTCbits.RC1			// demux digit sel B
+#define		DIGIT_SEL_B_DIR			TRISCbits.TRISC1
+#define		DIGIT_SEL_C				PORTCbits.RC2			// demux digit sel C
+#define		DIGIT_SEL_C_DIR			TRISCbits.TRISC2
 
 
 

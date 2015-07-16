@@ -172,7 +172,7 @@ void WriteDataToDisplay(UINT8 digit, UINT8 data);
 void makeBitMap(UINT8 id , UINT8 row );
 
 
-#pragma idata mmd_data
+#pragma idata MMD_DATA
 MMD_Segment mmdSegment[MMD_MAX_SEGMENTS]= {0};
 #pragma udata
 
@@ -485,15 +485,9 @@ void MMD_refreshDisplay(void)
 	UINT8 dataByte,addr;
 	UINT8 i,j;
 
-	//MMD_CONTROL = 0;	//disable the display
-	ROW_SEL_A = 0;
-	ROW_SEL_B = 0;
-	ROW_SEL_C = 0;
-	ROW_SEL_D = 0;
-	ROW_SEL_E = 0;
-	ROW_SEL_F = 0;
-	ROW_SEL_G = 0;
-	ROW_SEL_H = 0;
+	MMD_CONTROL = 0;	//disable the display
+
+	Delay10us(1);
 
 	
 
@@ -526,100 +520,55 @@ void MMD_refreshDisplay(void)
 	switch( iSRState )
 	{
 		case 0:
-			ROW_SEL_A = 1;
-			ROW_SEL_B = 0;
-			ROW_SEL_C = 0;
-			ROW_SEL_D = 0;
-			ROW_SEL_E = 0;
-			ROW_SEL_F = 0;
-			ROW_SEL_G = 0;
-			ROW_SEL_H = 0;
+				DIGIT_SEL_A	 = 0;
+				DIGIT_SEL_B	 = 0;
+				DIGIT_SEL_C	 = 0;
 			break;
-
 		case 1:
-			ROW_SEL_A = 0;
-			ROW_SEL_B = 1;
-			ROW_SEL_C = 0;
-			ROW_SEL_D = 0;
-			ROW_SEL_E = 0;
-			ROW_SEL_F = 0;
-			ROW_SEL_G = 0;	
-			ROW_SEL_H = 0;
+				DIGIT_SEL_A	 = 1;
+				DIGIT_SEL_B	 = 0;
+				DIGIT_SEL_C	 = 0;
 			break;
 
 		case 2:
-			ROW_SEL_A = 0;
-			ROW_SEL_B = 0;
-			ROW_SEL_C = 1;
-			ROW_SEL_D = 0;
-			ROW_SEL_E = 0;
-			ROW_SEL_F = 0;
-			ROW_SEL_G = 0;
-			ROW_SEL_H = 0;	
+				DIGIT_SEL_A	 = 0;
+				DIGIT_SEL_B	 = 1;
+				DIGIT_SEL_C	 = 0;
 			break;
 
 		case 3:
-			ROW_SEL_A = 0;
-			ROW_SEL_B = 0;
-			ROW_SEL_C = 0;
-			ROW_SEL_D = 1;
-			ROW_SEL_E = 0;
-			ROW_SEL_F = 0;
-			ROW_SEL_G = 0;
-			ROW_SEL_H = 0;
-			break;
+				DIGIT_SEL_A	 = 1;
+				DIGIT_SEL_B	 = 1;
+				DIGIT_SEL_C	 = 0;
 
+			break;
 		case 4:
-			ROW_SEL_A = 0;
-			ROW_SEL_B = 0;
-			ROW_SEL_C = 0;
-			ROW_SEL_D = 0;
-			ROW_SEL_E = 1;
-			ROW_SEL_F = 0;
-			ROW_SEL_G = 0;
-			ROW_SEL_H = 0;
+				DIGIT_SEL_A	 = 0;
+				DIGIT_SEL_B	 = 0;
+				DIGIT_SEL_C	 = 1;
 			break;
 
 		case 5:
-			ROW_SEL_A = 0;
-			ROW_SEL_B = 0;
-			ROW_SEL_C = 0;
-			ROW_SEL_D = 0;
-			ROW_SEL_E = 0;
-			ROW_SEL_F = 1;
-			ROW_SEL_G = 0;
-			ROW_SEL_H = 0;
+				DIGIT_SEL_A	 = 1;
+				DIGIT_SEL_B	 = 0;
+				DIGIT_SEL_C	 = 1;
 			break;
 
 		case 6:
-			ROW_SEL_A = 0;
-			ROW_SEL_B = 0;
-			ROW_SEL_C = 0;
-			ROW_SEL_D = 0;
-			ROW_SEL_E = 0;
-			ROW_SEL_F = 0;
-			ROW_SEL_G = 1;
-			ROW_SEL_H = 0;
+				DIGIT_SEL_A	 = 0;
+				DIGIT_SEL_B	 = 1;
+				DIGIT_SEL_C	 = 1;
 			break;
 
-		case 7:
-			ROW_SEL_A = 0;
-			ROW_SEL_B = 0;
-			ROW_SEL_C = 0;
-			ROW_SEL_D = 0;
-			ROW_SEL_E = 0;
-			ROW_SEL_F = 0;
-			ROW_SEL_G = 0;
-			ROW_SEL_H = 1;
-			break;
 
- 		default:
+		default:
+				iSRState = 0;
 			break;
 	}
 
-//	MMD_CONTROL = 1;
+	MMD_CONTROL = 1;
 	iSRState++;
-	if( iSRState > ROWS_PER_SYMBOL )
+	if( iSRState >= ROWS_PER_SYMBOL )
 	{
 		iSRState = 0;
 
