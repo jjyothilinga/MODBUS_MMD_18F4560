@@ -60,6 +60,9 @@
 #define 	SER_RX					PORTCbits.RC7			// serial receive
 #define		SER_RX_DIR				TRISCbits.TRISC7
 
+#define		KEYPAD_PORT_0			PORTAbits.RA1			// Proxymity sensor input
+#define		KEYPAD_PORT_0_DIRECTION	TRISAbits.TRISA1
+
 // MMD PORTS
 #define 	DISPLAY_CONTROL				PORTEbits.RE0
 #define 	DISPLAY_CONTROL_DIRECTION	TRISEbits.TRISE0

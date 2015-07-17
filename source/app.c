@@ -52,7 +52,13 @@ void APP_init(void)
 void APP_task(void)
 {
 
-
+	if (LinearKeyPad_getKeyState(INPUT_KEY) == TRUE)
+	{
+		//INCREMENT ACTUAL COUNT
+		//CALCULATE PARAMETERS
+		//UPDATE DISPLAY
+	}
+		
 }
 
 
